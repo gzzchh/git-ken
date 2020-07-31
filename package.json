@@ -14,7 +14,8 @@
     "build": "rimraf dist && tsc",
     "gitcracken": "node dist/bin/gitcracken.js",
     "gitcracken:dev": "node $NODE_DEBUG_OPTION -r ts-node/register bin/gitcracken.ts",
-    "lint": "tslint -p tsconfig.json"
+    "lint": "tslint -p tsconfig.json",
+    "build-ts": "tsc --project ./tsconfig.json"
   },
   "dependencies": {
     "asar": "^2.0.1",
@@ -26,6 +27,7 @@
     "getmac": "^1.4.6",
     "natsort": "^2.0.2",
     "node-emoji": "^1.10.0",
+    "pkg": "^4.4.9",
     "pkg-dir": "^4.2.0",
     "uuid": "^3.3.2"
   },
@@ -47,5 +49,13 @@
   "files": [
     "dist",
     "patches"
-  ]
+  ],
+  "pkg": {
+    "assets": [
+      "./node_modules/@types",
+      "./node_modules/typescript/lib/*.d.ts",
+      "src/**/*.ts",
+      "./tsconfig.json"
+    ]
+  }
 }

@@ -1,24 +1,67 @@
 # GitCracken
-GitKraken utils for non-commercial use
 
-Working on `GNU/Linux` (without `snap`), `Windows` and `macOS`.
+GitKraken 的破解工具
 
-Author: KillWolfVlad at [GitKraken-AUR](https://github.com/KillWolfVlad/GitKraken-AUR)
+支持 Linux(非 Snap) ,Windows, macOS
 
-> WARNING! On `macOS` you should patch `GitKraken` only after first launch and full program closing!
+> 警告! macOS 用户请务必运行一次程序然后完全退出
 
-## Requirements
+## 依赖
 
-- `Node.js` v12 LTS or later
+- `NodeJS` 12 或更高
 - `yarn`
 
-## Quick start
+## 构建
 
-- `git clone https://github.com/5cr1pt/GitCracken.git`
-- `cd GitCracken/GitCracken/`
 - `yarn install`
 - `yarn build`
-- `node dist/bin/gitcracken.js patcher`
+- `node dist/bin/gitcracken.js --help` 来获取使用信息
+
+### Patcher
+
+```bash
+$ gitcracken patcher [options] [actions...]
+```
+
+`actions` - array of values (any order, any count)
+
+> If `actions` is empty, will be used `auto` mode (ideal for beginners)
+
+| Action   | Description                                 |
+| -------- | ------------------------------------------- |
+| `backup` | Backup `app.asar` file                      |
+| `unpack` | Unpack `app.asar` file into `app` directory |
+| `patch`  | Patch `app` directory                       |
+| `pack`   | Pack `app` directory to `app.asar` file     |
+| `remove` | Remove `app` directory                      |
+
+| Option            | Description (if not defined, will be used `auto` value)         |
+| ----------------- | --------------------------------------------------------------- |
+| `-a`, `--asar`    | Path to `app.asar` file                                         |
+| `-d`, `--dir`     | Path to `app` directory                                         |
+| `-f`, `--feature` | Patcher feature (from [patches](patches) dir without extension) |
+
+> You can invoke `-f`, `--feature` several times to apply all patches!
+
+### Examples
+
+`Auto` patch installed `GitKraken` (maybe require `sudo` privileges on `GNU/Linux`)
+
+```bash
+$ gitcracken patcher
+```
+
+Use custom path to `app.asar`
+
+```bash
+$ gitcracken patcher --asar ~/Downloads/gitkraken/resources/app.asar
+```
+
+Use custom `actions` (`backup`, `unpack` and `patch`)
+
+```bash
+$ gitcracken patcher backup unpack patch
+```
 
 ## Disable Automatic Update
 
@@ -27,6 +70,3 @@ Add this content to your `hosts` file:
 ```text
 0.0.0.0 release.gitkraken.com
 ```
-
-Check [GitCracken/README.md](https://github.com/5cr1pt/GitCracken/blob/master/GitCracken/README.md) for more usage information.
-
