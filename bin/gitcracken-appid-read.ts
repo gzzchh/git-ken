@@ -1,6 +1,5 @@
-import chalk from "chalk";
+import * as chalk from "chalk";
 import * as program from "commander";
-
 import {AppId, Logo} from "../src";
 
 program
