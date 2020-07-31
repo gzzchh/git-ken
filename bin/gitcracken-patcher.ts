@@ -82,7 +82,7 @@ program
   .option(
     "-f, --feature <value>",
     "patcher feature",
-    (val, memo) => {
+    (val, memo: string[]) => {
       memo.push(val);
       return memo;
     },
