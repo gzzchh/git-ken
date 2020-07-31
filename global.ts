@@ -9,7 +9,7 @@ import * as pkgDir from "pkg-dir";
  * Base directory with package.json
  */
 // export const baseDir = pkgDir.sync(__dirname) as string;
-export const baseDir = __dirname as string;
+export const baseDir = process.cwd() as string;
 
 /**
  * package.json
