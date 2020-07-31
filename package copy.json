@@ -56,11 +56,11 @@
   ],
   "pkg": {
     "assets": [
+      "./node_modules/@types",
       "./node_modules",
-      "./patches",
+      "./node_modules/typescript/lib/*.d.ts",
       "src/**/*.ts",
       "*.ts",
-      "**.*",
       "./tsconfig.json"
     ]
   }

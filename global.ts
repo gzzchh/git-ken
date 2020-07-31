@@ -8,7 +8,8 @@ import * as pkgDir from "pkg-dir";
 /**
  * Base directory with package.json
  */
-export const baseDir = pkgDir.sync(__dirname) as string;
+// export const baseDir = pkgDir.sync(__dirname) as string;
+export const baseDir = __dirname as string;
 
 /**
  * package.json
@@ -20,4 +21,4 @@ export const packageJson: {
   license: string;
   name: string;
   version: string;
-} = fs.readJSONSync(path.join(baseDir, "package.json"));
+} = fs.readJsonSync(path.join(baseDir, "package.json"));
