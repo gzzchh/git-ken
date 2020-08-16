@@ -19,10 +19,7 @@ export class AppId {
    * @throws Error
    */
   public static generate(mac: string): string {
-    return crypto
-      .createHash("sha1")
-      .update(mac, "utf8")
-      .digest("hex");
+    return crypto.createHash("sha1").update(mac, "utf8").digest("hex");
   }
 
   /**
@@ -31,11 +28,13 @@ export class AppId {
    */
   public static async generateAsync(): Promise<string> {
     let mac: string;
-    try {
-      mac = await util.promisify(getMac)();
-    } catch {
-      mac = uuid.v4();
-    }
+    // try {
+    //   mac = await util.promisify(getMac)();
+    // } catch {
+    //   mac = uuid.v4();
+    // }
+    // 用个鸡儿的MAC 直接UUID就完事了
+    mac = uuid.v4();
     return AppId.generate(mac);
   }
 

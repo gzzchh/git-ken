@@ -8,11 +8,11 @@
   "homepage": "https://pastebin.com/u/KillWolfVlad",
   "main": "dist/index.js",
   "bin": {
-    "gitcraken": "./bin/gitcracken.js"
+    "gitcraken": "./dist/bin/gitcracken.js"
   },
   "scripts": {
     "build": "rimraf dist && tsc && run-s copy-files",
-    "package": "pkg -t node12-linux dist/ --out-path=bin-dist/",
+    "package": "pkg -t node12-linux . --out-path=bin-dist/",
     "make": "run-s build && run-s package",
     "gitcracken": "node dist/bin/gitcracken.js",
     "gitcracken:dev": "node $NODE_DEBUG_OPTION -r ts-node/register bin/gitcracken.ts",
@@ -29,7 +29,6 @@
     "diff": "^4.0.2",
     "figlet": "^1.5.0",
     "fs-extra": "^9.0.1",
-    "getmac": "^5.13.0",
     "natsort": "^2.0.2",
     "node-emoji": "^1.10.0",
     "uuid": "^8.3.0"
@@ -52,16 +51,12 @@
   },
   "files": [],
   "pkg": {
-    "scripts": [
-      "**/gitcracken.js",
-      "**/gitcracken*.js",
-      "global.js",
-      "index.js"
-    ],
+    "scripts": [],
     "assets": [
+      "./node_modules/figlet/fonts/ANSI Shadow.flf",
       "./patches",
-      "package.json",
-      "./dist"
+      "./dist",
+      "package.json"
     ]
   }
 }
