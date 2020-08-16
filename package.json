@@ -8,11 +8,11 @@
   "homepage": "https://pastebin.com/u/KillWolfVlad",
   "main": "dist/index.js",
   "bin": {
-    "gitcraken": "./dist/bin/gitcracken.js"
+    "gitcraken": "./bin/gitcracken.js"
   },
   "scripts": {
     "build": "rimraf dist && tsc && run-s copy-files",
-    "package": "pkg -t node12-linux .",
+    "package": "pkg -t node12-linux dist/ --out-path=bin-dist/",
     "make": "run-s build && run-s package",
     "gitcracken": "node dist/bin/gitcracken.js",
     "gitcracken:dev": "node $NODE_DEBUG_OPTION -r ts-node/register bin/gitcracken.ts",
@@ -50,18 +50,18 @@
     "ts-node": "^8.10.2",
     "typescript": "^3.9.7"
   },
-  "files": [
-    "dist",
-    "patches"
-  ],
+  "files": [],
   "pkg": {
+    "scripts": [
+      "**/gitcracken.js",
+      "**/gitcracken*.js",
+      "global.js",
+      "index.js"
+    ],
     "assets": [
-      "./node_modules",
       "./patches",
-      "src/**/*.ts",
-      "*.ts",
-      "**.*",
-      "./tsconfig.json"
+      "package.json",
+      "./dist"
     ]
   }
 }
