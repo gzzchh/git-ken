@@ -271,5 +271,5 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-bin-dist/
+package/
 yarn.lock

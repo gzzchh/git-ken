@@ -12,7 +12,10 @@
   },
   "scripts": {
     "build": "rimraf dist && tsc && run-s copy-files",
-    "package": "pkg -t node12-linux . --out-path=bin-dist/",
+    "package-linux": "pkg -t node12-linux . -o package/gitcraken-linux",
+    "package-win": "pkg -t node12-win . -o package/gitcraken-win.exe",
+    "package-macos": "pkg -t node12-macos . -o package/gitcraken-macos",
+    "package": "run-s package-linux && run-s package-win && run-s package-macos",
     "make": "run-s build && run-s package",
     "gitcracken": "node dist/bin/gitcracken.js",
     "gitcracken:dev": "node $NODE_DEBUG_OPTION -r ts-node/register bin/gitcracken.ts",
