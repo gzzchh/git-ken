@@ -14,7 +14,7 @@ GitKraken 的破解工具
 ## 构建
 
 - `yarn install`
-- `yarn build`
+- `yarn package` 构建三平台二进制,位于 package 文件夹
 - `node dist/bin/gitcracken.js --help` 来获取使用信息
 
 ### Patcher
