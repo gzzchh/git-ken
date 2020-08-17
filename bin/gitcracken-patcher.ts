@@ -1,6 +1,7 @@
 import * as chalk from "chalk";
 import * as program from "commander";
 import * as emoji from "node-emoji";
+import * as path from "path";
 
 import {Logo, Patcher} from "../";
 
@@ -10,6 +11,7 @@ const enum Actions {
   patch = 3,
   pack = 4,
   remove = 5,
+  clean = 6,
 }
 
 async function executeActions(actions: Actions[]) {
@@ -62,11 +64,20 @@ async function executeActions(actions: Actions[]) {
       }
       case Actions.remove: {
         console.log(
-          `${chalk.green("==>")} ${emoji.get("fire")} Remove ${chalk.green(
-            patcher.dir,
-          )}`,
+          `${chalk.green("==>")} ${emoji.get(
+            "fire",
+          )} 删除解压出来的文件夹 ${chalk.green(patcher.dir)}`,
         );
         patcher.removeDir();
+        break;
+      }
+      case Actions.clean: {
+        console.log(
+          `${chalk.green("==>")} ${emoji.get("fire")} 清理 ${chalk.green(
+            path.dirname(patcher.asar),
+          )} 中的备份`,
+        );
+        patcher.cleanbackup();
         break;
       }
     }
@@ -101,6 +112,7 @@ program
         Actions.patch,
         Actions.pack,
         Actions.remove,
+        Actions.clean,
       );
     } else {
       strActions.forEach((item) => {
@@ -119,6 +131,9 @@ program
             break;
           case "remove":
             actions.push(Actions.remove);
+            break;
+          case "clean":
+            actions.push(Actions.clean);
             break;
         }
       });

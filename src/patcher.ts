@@ -162,6 +162,25 @@ export class Patcher {
   public removeDir(): void {
     fs.removeSync(this.dir);
   }
+  /**
+   * 清理 asar 的备份
+   * @throws Error
+   */
+  public cleanbackup(): void {
+    let backupDir = path.dirname(this.asar);
+    // console.log(backupDir);
+    // 匹配备份文件
+    let filter = /\.backup$/;
+    // 读取和扫描
+    let files = fs.readdirSync(backupDir);
+    files.forEach(function (filename) {
+      let fullPath = path.join(backupDir, filename);
+      // 匹配则删除
+      if (filter.test(fullPath)) {
+        fs.removeSync(fullPath);
+      }
+    });
+  }
 
   /**
    * Patch app directory
