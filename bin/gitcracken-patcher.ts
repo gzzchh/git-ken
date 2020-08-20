@@ -92,12 +92,19 @@ program
   .option("-d, --dir <dir>", "app directory")
   .option(
     "-f, --feature <value>",
-    "patcher feature",
+    `要补丁的功能集,可选:
+      development (切换为开发版本-与切换为登台版本冲突),
+      staging (切换为登台版本-与切换为开发版本冲突),
+      individual (个人版),
+      pro (专业版),
+      selfhosted (自托管版),
+      standalone (独立版)
+    `,
     (val, memo: string[]) => {
       memo.push(val);
       return memo;
     },
-    [],
+    ["pro"],
   )
   .arguments("[actions...]")
   .action(async (strActions?: string[]) => {

@@ -1,0 +1,40 @@
+name: Build Binaries
+
+# 触发条件：在 push 到 master 分支后
+on:
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - "*" # Push events to matching v*, i.e. v1.0, v20.15.10
+
+# 任务
+jobs:
+  build-and-release:
+    # 服务器环境：最新版 Ubuntu
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v2
+      - name: 准备 NodeJS
+        uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      - name: 准备依赖
+        run: yarn
+      - name: 构建二进制
+        run: yarn make
+      - name: 创建 Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            在帮助中添加显示补丁的功能集的功能
+          draft: false
+          prerelease: false

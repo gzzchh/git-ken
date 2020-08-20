@@ -104,7 +104,7 @@ export class Patcher {
     this._dir = options.dir || Patcher.findDir(this.asar);
     this._features = options.features;
     if (!this.features.length) {
-      throw new Error("Features is empty!");
+      throw new Error("Features is empty! ");
     }
   }
 
