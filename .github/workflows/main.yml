@@ -1,4 +1,4 @@
-name: Build Binaries
+name: 构建二进制
 
 # 触发条件：在 push 到 master 分支后
 on:
@@ -43,8 +43,11 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: 上传构建完毕的文件
-        uses: actions/upload-artifact@v2
+      - name: 向 Release 添加文件
+        uses: svenstaro/upload-release-action@v2
         with:
-          path: package/ # or path/to/artifact
-
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: package/*
+          tag: ${{ github.ref }}
+          overwrite: true
+          file_glob: true
