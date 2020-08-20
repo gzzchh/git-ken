@@ -18,14 +18,18 @@ jobs:
     steps:
       - name: 检出代码
         uses: actions/checkout@v2
+
       - name: 准备 NodeJS
         uses: actions/setup-node@v1
         with:
           node-version: "12.x"
+
       - name: 准备依赖
         run: yarn
+
       - name: 构建二进制
         run: yarn make
+
       - name: 创建 Release
         id: create_release
         uses: actions/create-release@v1
@@ -38,3 +42,33 @@ jobs:
             在帮助中添加显示补丁的功能集的功能
           draft: false
           prerelease: false
+
+      - name: 上传构建完毕的文件-Linux
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: package/gitcraken-linux
+          asset_name: gitcraken-linux
+
+      - name: 上传构建完毕的文件-Windows
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: package/gitcraken-win.exe
+          asset_name: gitcraken-win.exe
+
+      - name: 上传构建完毕的文件-macOS
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: package/gitcraken-macos
+          asset_name: gitcraken-macos
