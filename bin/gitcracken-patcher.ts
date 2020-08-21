@@ -104,7 +104,7 @@ program
       memo.push(val);
       return memo;
     },
-    ["pro"],
+    [],
   )
   .arguments("[actions...]")
   .action(async (strActions?: string[]) => {
@@ -113,6 +113,7 @@ program
     }
     const actions: Actions[] = [];
     if (!strActions || !strActions.length) {
+      // 此处为默认操作
       actions.push(
         Actions.backup,
         Actions.unpack,

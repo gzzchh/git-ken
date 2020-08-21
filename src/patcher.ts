@@ -135,6 +135,10 @@ export class Patcher {
    */
   public backupAsar(): string {
     const backup = `${this.asar}.${new Date().getTime()}.backup`;
+    const oriBackup = `${this.asar}.orig`;
+    if (!fs.existsSync(oriBackup)) {
+      fs.copySync(this.asar, oriBackup);
+    }
     fs.copySync(this.asar, backup);
     return backup;
   }
