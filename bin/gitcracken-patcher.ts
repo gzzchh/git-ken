@@ -6,12 +6,8 @@ import * as path from "path";
 import {Logo, Patcher} from "../";
 
 const enum Actions {
-  backup = 1,
-  unpack = 2,
-  patch = 3,
-  pack = 4,
-  remove = 5,
-  clean = 6,
+  patch = 1,
+  remove = 2,
 }
 
 async function executeActions(actions: Actions[]) {
@@ -23,25 +19,8 @@ async function executeActions(actions: Actions[]) {
   });
   for (const action of actions) {
     switch (action) {
-      case Actions.backup: {
-        console.log(
-          `${chalk.green("==>")} ${emoji.get("package")} Backup ` +
-            `${chalk.green(patcher.asar)} ➔ ${chalk.green(
-              patcher.backupAsar(),
-            )}`,
-        );
-        break;
-      }
-      case Actions.unpack: {
-        console.log(
-          `${chalk.green("==>")} ${emoji.get("unlock")} Unpack ${chalk.green(
-            patcher.asar,
-          )} ➔ ` + `${chalk.green(patcher.dir)}`,
-        );
-        patcher.unpackAsar();
-        break;
-      }
       case Actions.patch: {
+        // 解压指定文件并 Patch
         console.log(
           `${chalk.green("==>")} ${emoji.get("hammer")} Patch ${chalk.green(
             patcher.dir,
@@ -50,39 +29,22 @@ async function executeActions(actions: Actions[]) {
               .map((feature) => `${chalk.green(feature)}`)
               .join(", ")} features`,
         );
-        patcher.patchDir();
+        patcher.applyPatch();
         break;
       }
-      case Actions.pack: {
-        console.log(
-          `${chalk.green("==>")} ${emoji.get("lock")} Pack ${chalk.green(
-            patcher.dir,
-          )} ➔ ` + `${chalk.green(patcher.asar)}`,
-        );
-        await patcher.packDirAsync();
-        break;
-      }
+      // 移除补丁
       case Actions.remove: {
         console.log(
-          `${chalk.green("==>")} ${emoji.get(
-            "fire",
-          )} 删除解压出来的文件夹 ${chalk.green(patcher.dir)}`,
+          `${chalk.green("==>")} ${emoji.get("fire")} 移除补丁 ${chalk.green(
+            patcher.dir,
+          )}`,
         );
-        patcher.removeDir();
-        break;
-      }
-      case Actions.clean: {
-        console.log(
-          `${chalk.green("==>")} ${emoji.get("fire")} 清理 ${chalk.green(
-            path.dirname(patcher.asar),
-          )} 中的备份`,
-        );
-        patcher.cleanbackup();
+        patcher.removePatch();
         break;
       }
     }
+    console.log(`${chalk.green("==>")} ${emoji.get("ok_hand")} Patching done!`);
   }
-  console.log(`${chalk.green("==>")} ${emoji.get("ok_hand")} Patching done!`);
 }
 
 program
@@ -114,34 +76,15 @@ program
     const actions: Actions[] = [];
     if (!strActions || !strActions.length) {
       // 此处为默认操作
-      actions.push(
-        Actions.backup,
-        Actions.unpack,
-        Actions.patch,
-        Actions.pack,
-        Actions.remove,
-        Actions.clean,
-      );
+      actions.push(Actions.patch, Actions.remove);
     } else {
       strActions.forEach((item) => {
         switch (item.toLowerCase()) {
-          case "backup":
-            actions.push(Actions.backup);
-            break;
-          case "unpack":
-            actions.push(Actions.unpack);
-            break;
           case "patch":
             actions.push(Actions.patch);
             break;
-          case "pack":
-            actions.push(Actions.pack);
-            break;
           case "remove":
             actions.push(Actions.remove);
-            break;
-          case "clean":
-            actions.push(Actions.clean);
             break;
         }
       });

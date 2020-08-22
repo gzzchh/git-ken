@@ -150,40 +150,8 @@ export class Patcher {
   public unpackAsar(): void {
     asar.extractAll(this.asar, this.dir);
   }
-
-  /**
-   * Pack app directory to app.asar file
-   * @throws Error
-   */
-  public packDirAsync(): Promise<void> {
-    return asar.createPackage(this.dir, this.asar);
-  }
-
-  /**
-   * Remove app directory
-   * @throws Error
-   */
-  public removeDir(): void {
-    fs.removeSync(this.dir);
-  }
-  /**
-   * 清理 asar 的备份
-   * @throws Error
-   */
-  public cleanbackup(): void {
-    let backupDir = path.dirname(this.asar);
-    // console.log(backupDir);
-    // 匹配备份文件
-    let filter = /\.backup$/;
-    // 读取和扫描
-    let files = fs.readdirSync(backupDir);
-    files.forEach(function (filename) {
-      let fullPath = path.join(backupDir, filename);
-      // 匹配则删除
-      if (filter.test(fullPath)) {
-        fs.removeSync(fullPath);
-      }
-    });
+  public unpackFileFromAsar(filename: string): void {
+    asar.extractFile(this.asar, filename);
   }
 
   /**
@@ -194,6 +162,33 @@ export class Patcher {
     for (const feature of this.features) {
       this.patchDirWithFeature(feature);
     }
+  }
+
+  // 这里是直接重写的应用补丁
+  public applyPatch(): void {
+    // 一开始先清理一下
+    this.removePatch();
+    for (const feature of this.features) {
+      this.applyPatchWithFeature(feature);
+    }
+  }
+  private applyPatchWithFeature(feature: string): void {
+    // 首先要解析补丁
+    const patches = diff.parsePatch(
+      fs.readFileSync(path.join(baseDir, "patches", `${feature}.diff`), "utf8"),
+    );
+    // 输出一下补丁信息
+    for (const patch of patches) {
+      // console.log(patch);
+      // 先确定文件名,再解压和 Patch
+      let oldFileName = patch.oldFileName;
+      console.log(oldFileName);
+    }
+  }
+
+  // 这里加入移除补丁
+  public removePatch(): void {
+    fs.removeSync(this.dir);
   }
 
   private patchDirWithFeature(feature: string): void {
