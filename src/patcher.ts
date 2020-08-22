@@ -8,6 +8,7 @@ import natsort from "natsort";
 
 import {baseDir} from "../global";
 import {CURRENT_PLATFORM, Platforms} from "./platform";
+import {strict} from "assert";
 
 /**
  * Patcher options
@@ -129,39 +130,13 @@ export class Patcher {
     return this._features;
   }
 
-  /**
-   * Backup app.asar file
-   * @throws Error
-   */
-  public backupAsar(): string {
-    const backup = `${this.asar}.${new Date().getTime()}.backup`;
-    const oriBackup = `${this.asar}.orig`;
-    if (!fs.existsSync(oriBackup)) {
-      fs.copySync(this.asar, oriBackup);
-    }
-    fs.copySync(this.asar, backup);
-    return backup;
-  }
-
-  /**
-   * Unpack app.asar file into app directory
-   * @throws Error
-   */
-  public unpackAsar(): void {
-    asar.extractAll(this.asar, this.dir);
-  }
-  public unpackFileFromAsar(filename: string): void {
-    asar.extractFile(this.asar, filename);
-  }
-
-  /**
-   * Patch app directory
-   * @throws Error
-   */
-  public patchDir(): void {
-    for (const feature of this.features) {
-      this.patchDirWithFeature(feature);
-    }
+  private unpackFileFromAsar(filename: string): void {
+    // 解压出具体文件 给出的是 Buffer
+    let fileBuffer = asar.extractFile(this.asar, filename);
+    let fileDst: string = path.join(this.dir, filename);
+    fs.ensureDirSync(path.dirname(fileDst));
+    // 要把解压出来的东西放在这里
+    fs.writeFileSync(fileDst, fileBuffer);
   }
 
   // 这里是直接重写的应用补丁
@@ -181,26 +156,14 @@ export class Patcher {
     for (const patch of patches) {
       // console.log(patch);
       // 先确定文件名,再解压和 Patch
-      let oldFileName = patch.oldFileName;
-      console.log(oldFileName);
+      let oldFileName: string = String(patch.oldFileName);
+      // console.log(oldFileName);
+      this.applyPatchToFile(oldFileName, patch);
     }
   }
 
-  // 这里加入移除补丁
-  public removePatch(): void {
-    fs.removeSync(this.dir);
-  }
-
-  private patchDirWithFeature(feature: string): void {
-    const patches = diff.parsePatch(
-      fs.readFileSync(path.join(baseDir, "patches", `${feature}.diff`), "utf8"),
-    );
-    for (const patch of patches) {
-      this.patchDirWithPatch(patch);
-    }
-  }
-
-  private patchDirWithPatch(patch: diff.ParsedDiff): void {
+  private applyPatchToFile(filename: string, patch: diff.ParsedDiff): void {
+    this.unpackFileFromAsar(filename);
     const sourceData = fs.readFileSync(
       path.join(this.dir, patch.oldFileName!),
       "utf8",
@@ -217,5 +180,18 @@ export class Patcher {
       sourcePatchedData,
       "utf8",
     );
+  }
+
+  // 这里加入移除补丁
+  public removePatch(): void {
+    // 防止误操作,必须是存在 asar 的文件夹
+    if (fs.existsSync(this.asar)) {
+      // console.log(this.dir);
+      let asarDir: string = this.asar.split(".").slice(0, -1).join(".");
+      fs.removeSync(asarDir);
+      console.log(asarDir);
+    }
+    // console.log("this.asar:", this.asar);
+    // console.log("this.dir:", this.dir);
   }
 }
