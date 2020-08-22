@@ -76,7 +76,7 @@ program
     const actions: Actions[] = [];
     if (!strActions || !strActions.length) {
       // 此处为默认操作
-      actions.push(Actions.patch, Actions.remove);
+      actions.push(Actions.patch);
     } else {
       strActions.forEach((item) => {
         switch (item.toLowerCase()) {

@@ -143,6 +143,8 @@ export class Patcher {
   public applyPatch(): void {
     // 一开始先清理一下
     this.removePatch();
+    // 首先要释放 package.json 否则无效
+    this.unpackFileFromAsar("package.json");
     for (const feature of this.features) {
       this.applyPatchWithFeature(feature);
     }
@@ -168,6 +170,7 @@ export class Patcher {
       path.join(this.dir, patch.oldFileName!),
       "utf8",
     );
+    // console.log(path.join(this.dir, patch.oldFileName!));
     const sourcePatchedData = diff.applyPatch(sourceData, patch);
     if ((sourcePatchedData as any) === false) {
       throw new Error(`Can't patch ${patch.oldFileName}`);
@@ -189,7 +192,7 @@ export class Patcher {
       // console.log(this.dir);
       let asarDir: string = this.asar.split(".").slice(0, -1).join(".");
       fs.removeSync(asarDir);
-      console.log(asarDir);
+      // console.log(asarDir);
     }
     // console.log("this.asar:", this.asar);
     // console.log("this.dir:", this.dir);
