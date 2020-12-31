@@ -12,9 +12,9 @@ jobs:
   build-and-release:
     # 服务器环境：最新版 Ubuntu
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [12.x]
+    # strategy:
+    #   matrix:
+    #     node-version: [12.x]
     steps:
       - name: 检出代码
         uses: actions/checkout@v2
