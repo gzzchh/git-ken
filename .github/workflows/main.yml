@@ -22,7 +22,7 @@ jobs:
       - name: 准备 NodeJS
         uses: actions/setup-node@v1
         with:
-          node-version: "12.x"
+          node-version: "14.x"
 
       - name: 准备依赖
         run: yarn
