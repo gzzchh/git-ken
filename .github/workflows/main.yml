@@ -39,9 +39,7 @@ jobs:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
           body: |
-            添加初始备份功能,该备份不会被删除,用于随时切换回原版
-            该功能在执行backup的时候会自动检测.
-            现在选择功能集不会默认叠加pro
+            尝试支持 7.4.1 的 Standalone 许可,效果还不错
           draft: false
           prerelease: false
 
