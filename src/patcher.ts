@@ -211,7 +211,10 @@ export class Patcher {
       "utf8",
     );
     const sourcePatchedData = diff.applyPatch(sourceData, patch);
+    // console.log("原路径:" + path.join(this.dir, patch.oldFileName!));
+    // console.log("Patch中的原路径:" + patch.oldFileName);
     if ((sourcePatchedData as any) === false) {
+      // console.error(sourcePatchedData);
       throw new Error(`Can't patch ${patch.oldFileName}`);
     }
     if (patch.oldFileName !== patch.newFileName) {
