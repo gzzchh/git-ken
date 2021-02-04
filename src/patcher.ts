@@ -200,6 +200,47 @@ export class Patcher {
     const patches = diff.parsePatch(
       fs.readFileSync(path.join(baseDir, "patches", `${feature}.diff`), "utf8"),
     );
+    // 此处拷贝inject.js
+    let injectFileSourcePath = path.join(baseDir, "patches", "inject.js");
+    let injectFileTargetPath = path.join(
+      this.dir,
+      "src",
+      "main",
+      "static",
+      "inject.js",
+    );
+    // console.log(`注入文件在补丁的路径: ${injectFileSourcePath}`);
+    // console.log(`注入文件的目标路径: ${injectFileTargetPath}`);
+    // 测试源文件存在
+    // fs.stat(injectFileSourcePath, function (err, stat) {
+    //   if (err == null) {
+    //     console.log("inject src exist");
+    //   } else if (err.code === "ENOENT") {
+    //     console.log("inject src NOT exist");
+    //     // file does not exist
+    //     // fs.writeFile("log.txt", "Some log\n");
+    //   } else {
+    //     console.log("Some other error: ", err.code);
+    //   }
+    // });
+    // fs.copyFile(injectFileSourcePath, injectFileTargetPath, (err) => {
+    //   console.log(err);
+    // });
+    // 直接拷贝不可行
+    let injectFileContent = fs.readFileSync(injectFileSourcePath).toString();
+    fs.writeFileSync(injectFileTargetPath, injectFileContent);
+    // 测试拷贝是否成功
+    // fs.stat(injectFileTargetPath, function (err, stat) {
+    //   if (err == null) {
+    //     console.log("inject target exist");
+    //   } else if (err.code === "ENOENT") {
+    //     console.log("inject target NOT exist");
+    //     // file does not exist
+    //     // fs.writeFile("log.txt", "Some log\n");
+    //   } else {
+    //     console.log("Some other error: ", err.code);
+    //   }
+    // });
     for (const patch of patches) {
       this.patchDirWithPatch(patch);
     }
@@ -217,6 +258,7 @@ export class Patcher {
       // console.error(sourcePatchedData);
       throw new Error(`Can't patch ${patch.oldFileName}`);
     }
+    // console.log(patch.newFileName);
     if (patch.oldFileName !== patch.newFileName) {
       fs.unlinkSync(path.join(this.dir, patch.oldFileName!));
     }
